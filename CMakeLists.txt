@@ -25,3 +25,5 @@ if(MSVC)
 else()
     install(TARGETS one_wire_analyzer LIBRARY DESTINATION ".")
 endif()
+
+set_post_build_destination(one_wire_analyzer)
