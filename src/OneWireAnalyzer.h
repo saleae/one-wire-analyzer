@@ -46,7 +46,7 @@ const U64 SPEC_SAMPLE_POINT = 19;
 const U64 SPEC_OVD_SAMPLE_POINT = 3;
 
 
-class ANALYZER_EXPORT OneWireAnalyzer : public Analyzer2
+class OneWireAnalyzer : public Analyzer2
 {
 public:
 	OneWireAnalyzer();
