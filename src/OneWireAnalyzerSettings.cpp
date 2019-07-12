@@ -13,7 +13,8 @@ mOverdrive( false )
 	mOneWireChannelInterface->SetChannel( mOneWireChannel );
 
 	mOverDriveInterface.reset( new AnalyzerSettingInterfaceBool() );
-	mOverDriveInterface->SetTitleAndTooltip( "Overdrive only mode", "The analyzer will only operate at high speed overdrive mode." );
+	mOverDriveInterface->SetTitleAndTooltip( "", "The analyzer will only operate at high speed overdrive mode." );
+	mOverDriveInterface->SetCheckBoxText( "Overdrive only mode" );
 	mOverDriveInterface->SetValue( false );
 
 	AddInterface( mOneWireChannelInterface.get() );
