@@ -6,7 +6,31 @@
 #include "OneWireAnalyzer.h"
 #include "OneWireAnalyzerSettings.h"
 #include <AnalyzerChannelData.h>
+#include <unordered_map>
+namespace
+{
+    const std::unordered_map<OneWireFrameType, std::string> OneWireFrameTypeLookup = { { RestartPulse, "RestartPulse" },
+                                                                                       { PresencePulse, "PresencePulse" },
+                                                                                       { ReadRomFrame, "ReadRomFrame" },
+                                                                                       { SkipRomFrame, "SkipRomFrame" },
+                                                                                       { SearchRomFrame, "SearchRomFrame" },
+                                                                                       { MatchRomFrame, "MatchRomFrame" },
+                                                                                       { OverdriveSkipRomFrame, "OverdriveSkipRomFrame" },
+                                                                                       { OverdriveMatchRomFrame, "OverdriveMatchRomFrame" },
+                                                                                       { CRC, "CRC" },
+                                                                                       { FamilyCode, "FamilyCode" },
+                                                                                       { Rom, "Rom" },
+                                                                                       { Byte, "Byte" },
+                                                                                       { Bit, "Bit" },
+                                                                                       { InvalidRomCommandFrame, "InvalidRomCommandFrame" },
+                                                                                       { AlarmSearchFrame, "AlarmSearchFrame" } };
 
+
+    std::string OneWireFrameTypeToString( OneWireFrameType& type )
+    {
+        return OneWireFrameTypeLookup.at( type );
+    }
+}
 
 OneWireAnalyzer::OneWireAnalyzer() : mSettings( new OneWireAnalyzerSettings() ), Analyzer2(), mSimulationInitilized( false )
 {
@@ -692,6 +716,10 @@ void OneWireAnalyzer::RecordFrame( U64 starting_sample, U64 ending_sample, OneWi
     frame.mData1 = data;
 
     mResults->AddFrame( frame );
+
+    FrameV2 frame_v2;
+
+    mResults->AddFrameV2( frame_v2, "", frame.mStartingSampleInclusive, frame.mEndingSampleInclusive );
 
     mResults->CommitResults();
 }
