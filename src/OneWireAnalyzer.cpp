@@ -744,8 +744,8 @@ void OneWireAnalyzer::RecordFrame( U64 starting_sample, U64 ending_sample, OneWi
         frame_v2.AddByte( "family", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case Rom:
-        frame_v2_type = "rom";
-        frame_v2.AddInteger( "rom", frame.mData1 );
+        frame_v2_type = "id";
+        frame_v2.AddInteger( "id", frame.mData1 );
         break;
     case Byte:
         frame_v2_type = "data";
