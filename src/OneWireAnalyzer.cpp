@@ -706,55 +706,61 @@ void OneWireAnalyzer::RecordFrame( U64 starting_sample, U64 ending_sample, OneWi
         break;
     case ReadRomFrame:
         frame_v2_type = "rom_command";
-        frame_v2.AddString( "RomCommand", "Read" );
+        frame_v2.AddString( "description", "read" );
+        frame_v2.AddByte( "rom_command", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case SkipRomFrame:
         frame_v2_type = "rom_command";
-        frame_v2.AddString( "RomCommand", "Skip" );
+        frame_v2.AddString( "description", "skip" );
+        frame_v2.AddByte( "rom_command", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case SearchRomFrame:
         frame_v2_type = "rom_command";
-        frame_v2.AddString( "RomCommand", "Search" );
+        frame_v2.AddString( "description", "search" );
+        frame_v2.AddByte( "rom_command", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case MatchRomFrame:
         frame_v2_type = "rom_command";
-        frame_v2.AddString( "RomCommand", "Match" );
+        frame_v2.AddString( "description", "match" );
+        frame_v2.AddByte( "rom_command", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case OverdriveSkipRomFrame:
         frame_v2_type = "rom_command";
-        frame_v2.AddString( "RomCommand", "Skip" );
+        frame_v2.AddString( "description", "skip" );
+        frame_v2.AddByte( "rom_command", static_cast<uint8_t>( frame.mData1 ) );
         // TODO: handle over drive - add boolean to all overdrive frames.
         break;
     case OverdriveMatchRomFrame:
         frame_v2_type = "rom_command";
-        frame_v2.AddString( "RomCommand", "Match" );
+        frame_v2.AddString( "description", "match" );
+        frame_v2.AddByte( "rom_command", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case CRC:
         frame_v2_type = "crc";
-        frame_v2.AddString( "RomCommand", "Match" );
+        frame_v2.AddByte( "crc", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case FamilyCode:
         frame_v2_type = "family_code";
-        frame_v2.AddByte( "Family", static_cast<uint8_t>( frame.mData1 ) );
+        frame_v2.AddByte( "family", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case Rom:
         frame_v2_type = "rom";
-        frame_v2.AddInteger( "Rom", frame.mData1 );
+        frame_v2.AddInteger( "rom", frame.mData1 );
         break;
     case Byte:
         frame_v2_type = "data";
-        frame_v2.AddByte( "Family", static_cast<uint8_t>( frame.mData1 ) );
+        frame_v2.AddByte( "data", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case Bit:
         frame_v2_type = "bit";
         break;
     case InvalidRomCommandFrame:
         frame_v2_type = "invalid_rom_command";
-        frame_v2.AddInteger( "RomCommand", frame.mData1 );
+        frame_v2.AddByte( "rom_command", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case AlarmSearchFrame:
         frame_v2_type = "alarm";
-        frame_v2.AddInteger( "RomCommand", frame.mData1 );
+        frame_v2.AddByte( "rom_command", static_cast<uint8_t>( frame.mData1 ) );
         break;
     }
 
