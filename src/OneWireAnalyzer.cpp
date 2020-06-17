@@ -695,6 +695,7 @@ void OneWireAnalyzer::RecordFrame( U64 starting_sample, U64 ending_sample, OneWi
 
     FrameV2 frame_v2;
     std::string frame_v2_type;
+    bool ignore_frame_v2 = false;
 
     switch( type )
     {
@@ -752,7 +753,8 @@ void OneWireAnalyzer::RecordFrame( U64 starting_sample, U64 ending_sample, OneWi
         frame_v2.AddByte( "data", static_cast<uint8_t>( frame.mData1 ) );
         break;
     case Bit:
-        frame_v2_type = "bit";
+        // the Bit enum value is never used.
+        ignore_frame_v2 = true;
         break;
     case InvalidRomCommandFrame:
         frame_v2_type = "invalid_rom_command";
@@ -764,7 +766,10 @@ void OneWireAnalyzer::RecordFrame( U64 starting_sample, U64 ending_sample, OneWi
         break;
     }
 
-    mResults->AddFrameV2( frame_v2, frame_v2_type.c_str(), frame.mStartingSampleInclusive, frame.mEndingSampleInclusive );
+    if( !ignore_frame_v2 )
+    {
+        mResults->AddFrameV2( frame_v2, frame_v2_type.c_str(), frame.mStartingSampleInclusive, frame.mEndingSampleInclusive );
+    }
 
     mResults->CommitResults();
 }
