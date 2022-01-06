@@ -11,6 +11,7 @@
 OneWireAnalyzer::OneWireAnalyzer() : mSettings( new OneWireAnalyzerSettings() ), Analyzer2(), mSimulationInitilized( false )
 {
     SetAnalyzerSettings( mSettings.get() );
+    UseFrameV2();
 }
 
 OneWireAnalyzer::~OneWireAnalyzer()
