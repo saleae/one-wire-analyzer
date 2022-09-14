@@ -6,22 +6,22 @@
 
 class OneWireAnalyzerSettings : public AnalyzerSettings
 {
-public:
-	OneWireAnalyzerSettings();
-	virtual ~OneWireAnalyzerSettings();
+  public:
+    OneWireAnalyzerSettings();
+    virtual ~OneWireAnalyzerSettings();
 
-	virtual bool SetSettingsFromInterfaces();  //Get the settings out of the interfaces, validate them, and save them to your local settings vars.
-	virtual void LoadSettings( const char* settings );  //Load your settings from a string.
-	virtual const char* SaveSettings();  //Save your settings to a string.
+    virtual bool
+    SetSettingsFromInterfaces(); // Get the settings out of the interfaces, validate them, and save them to your local settings vars.
+    virtual void LoadSettings( const char* settings ); // Load your settings from a string.
+    virtual const char* SaveSettings();                // Save your settings to a string.
 
-	void UpdateInterfacesFromSettings();
+    void UpdateInterfacesFromSettings();
 
-	Channel mOneWireChannel;
-	bool mOverdrive;
+    Channel mOneWireChannel;
+    bool mOverdrive;
 
-protected:
-	std::auto_ptr< AnalyzerSettingInterfaceChannel > mOneWireChannelInterface;
-	std::auto_ptr< AnalyzerSettingInterfaceBool > mOverDriveInterface;
-
+  protected:
+    std::auto_ptr<AnalyzerSettingInterfaceChannel> mOneWireChannelInterface;
+    std::auto_ptr<AnalyzerSettingInterfaceBool> mOverDriveInterface;
 };
-#endif //ONEWIRE_ANALYZER_SETTINGS
+#endif // ONEWIRE_ANALYZER_SETTINGS
