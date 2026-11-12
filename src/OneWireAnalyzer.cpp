@@ -38,6 +38,8 @@ void OneWireAnalyzer::WorkerThread()
     U64 current_sample = starting_sample;
 
     mSampleRateHz = this->GetSampleRate();
+    mStdSampleOffsetSamples = U32( NsToSamples( mSettings->mStdSamplePointNs ) );
+    mOvdSampleOffsetSamples = U32( NsToSamples( mSettings->mOvdSamplePointNs ) );
 
     mCurrentState = UnknownState;
     bool force_overdrive = mSettings->mOverdrive;
@@ -266,10 +268,7 @@ void OneWireAnalyzer::WorkerThread()
                 //Something Broke.
             }
             */
-            U64 sample_location_offset = UsToSamples( SPEC_SAMPLE_POINT );
-            if( force_overdrive || mOverdrive )
-                sample_location_offset = UsToSamples( SPEC_OVD_SAMPLE_POINT );
-            mOneWire->Advance( U32( sample_location_offset ) );
+            mOneWire->Advance( ( force_overdrive || mOverdrive ) ? mOvdSampleOffsetSamples : mStdSampleOffsetSamples );
 
             if( mOneWire->GetBitState() == BIT_HIGH )
             {
@@ -377,10 +376,7 @@ void OneWireAnalyzer::WorkerThread()
                     mByteStartSample = mFallingEdgeSample;
                 }
 
-                U64 sample_location_offset = UsToSamples( SPEC_SAMPLE_POINT );
-                if( force_overdrive || mOverdrive )
-                    sample_location_offset = UsToSamples( SPEC_OVD_SAMPLE_POINT );
-                mOneWire->Advance( U32( sample_location_offset ) );
+                mOneWire->Advance( ( force_overdrive || mOverdrive ) ? mOvdSampleOffsetSamples : mStdSampleOffsetSamples );
 
                 if( mOneWire->GetBitState() == BIT_HIGH )
                 {
@@ -467,10 +463,7 @@ void OneWireAnalyzer::WorkerThread()
                         //Something Broke.
                     }
                     */
-                    U64 sample_location_offset = UsToSamples( SPEC_SAMPLE_POINT );
-                    if( force_overdrive || mOverdrive )
-                        sample_location_offset = UsToSamples( SPEC_OVD_SAMPLE_POINT );
-                    mOneWire->Advance( U32( sample_location_offset ) );
+                    mOneWire->Advance( ( force_overdrive || mOverdrive ) ? mOvdSampleOffsetSamples : mStdSampleOffsetSamples );
 
                     if( mOneWire->GetBitState() == BIT_HIGH )
                     {
@@ -527,10 +520,7 @@ void OneWireAnalyzer::WorkerThread()
                 }
                 if( ( ( mRomBitsRecieved + 1 ) % 3 ) == 0 )
                 {
-                    U64 sample_location_offset = UsToSamples( SPEC_SAMPLE_POINT );
-                    if( force_overdrive || mOverdrive )
-                        sample_location_offset = UsToSamples( SPEC_OVD_SAMPLE_POINT );
-                    mOneWire->Advance( U32( sample_location_offset ) );
+                    mOneWire->Advance( ( force_overdrive || mOverdrive ) ? mOvdSampleOffsetSamples : mStdSampleOffsetSamples );
 
                     if( mOneWire->GetBitState() == BIT_HIGH )
                     {
@@ -586,10 +576,7 @@ void OneWireAnalyzer::WorkerThread()
                     mByteStartSample = mFallingEdgeSample;
                 }
 
-                U64 sample_location_offset = UsToSamples( SPEC_SAMPLE_POINT );
-                if( force_overdrive || mOverdrive )
-                    sample_location_offset = UsToSamples( SPEC_OVD_SAMPLE_POINT );
-                mOneWire->Advance( U32( sample_location_offset ) );
+                mOneWire->Advance( ( force_overdrive || mOverdrive ) ? mOvdSampleOffsetSamples : mStdSampleOffsetSamples );
 
                 if( mOneWire->GetBitState() == BIT_HIGH )
                 {
@@ -647,10 +634,7 @@ void OneWireAnalyzer::WorkerThread()
                 mByteStartSample = mFallingEdgeSample;
             }
 
-            U64 sample_location_offset = UsToSamples( SPEC_SAMPLE_POINT );
-            if( force_overdrive || mOverdrive )
-                sample_location_offset = UsToSamples( SPEC_OVD_SAMPLE_POINT );
-            mOneWire->Advance( U32( sample_location_offset ) );
+            mOneWire->Advance( ( force_overdrive || mOverdrive ) ? mOvdSampleOffsetSamples : mStdSampleOffsetSamples );
 
             if( mOneWire->GetBitState() == BIT_HIGH )
             {
@@ -795,6 +779,13 @@ bool OneWireAnalyzer::NeedsRerun()
 U64 OneWireAnalyzer::UsToSamples( U64 us )
 {
     return ( mSampleRateHz * us ) / 1000000;
+}
+
+// round to nearest sample, but never zero: Advance( 0 ) would sample the falling edge itself (always low)
+U64 OneWireAnalyzer::NsToSamples( U32 ns )
+{
+    U64 samples = ( U64( mSampleRateHz ) * ns + 500000000ull ) / 1000000000ull;
+    return samples ? samples : 1;
 }
 
 U64 OneWireAnalyzer::SamplesToUs( U64 samples )
