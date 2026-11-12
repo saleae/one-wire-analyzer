@@ -74,8 +74,16 @@ const U64 MARGIN_OUTSIDE_PRESENCE_PULSE = 10;
 const U64 MARGIN_OUTSIDE_OVD_PRESENCE_PULSE = 1;
 
 
-const U64 SPEC_SAMPLE_POINT = 19;
-const U64 SPEC_OVD_SAMPLE_POINT = 3;
+// Read-slot sample point, measured from the falling edge that starts the slot.
+// A device that drives a 0 must still hold the line low t_RDV after the falling edge (15 us standard, 2 us overdrive),
+// and the master must sample within that window. A 1 is therefore anything that has already been released by then.
+// The sample point has to sit inside t_RDV: sampling later misreads a legal short 0 (e.g. a 2.5 us overdrive 0)
+// as a 1. Values are in nanoseconds so sub-microsecond resolution is possible; defaults sit between a master-only
+// pulse and the shortest device-driven 0.
+const U32 DEFAULT_SAMPLE_POINT_NS = 13000;     // standard speed, t_RDV = 15 us
+const U32 DEFAULT_OVD_SAMPLE_POINT_NS = 1900;  // overdrive, t_RDV = 2 us
+const U32 MIN_SAMPLE_POINT_NS = 500;
+const U32 MAX_SAMPLE_POINT_NS = 14500;
 
 
 class OneWireAnalyzer : public Analyzer2
@@ -106,8 +114,11 @@ class OneWireAnalyzer : public Analyzer2
     void RecordFrame( U64 starting_sample, U64 ending_sample, OneWireFrameType type, U64 data = 0, bool warning = false );
     U64 UsToSamples( U64 us );
     U64 SamplesToUs( U64 samples );
+    U64 NsToSamples( U32 ns );
 
     U32 mSampleRateHz;
+    U32 mStdSampleOffsetSamples;
+    U32 mOvdSampleOffsetSamples;
 
     // decoding variables and functions.
     bool mOverdrive;            // 1-Wire in Overdrive mode. approx speed increase.

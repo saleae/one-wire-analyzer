@@ -19,9 +19,13 @@ class OneWireAnalyzerSettings : public AnalyzerSettings
 
     Channel mOneWireChannel;
     bool mOverdrive;
+    U32 mStdSamplePointNs;
+    U32 mOvdSamplePointNs;
 
   protected:
     std::auto_ptr<AnalyzerSettingInterfaceChannel> mOneWireChannelInterface;
     std::auto_ptr<AnalyzerSettingInterfaceBool> mOverDriveInterface;
+    std::auto_ptr<AnalyzerSettingInterfaceInteger> mStdSamplePointInterface;
+    std::auto_ptr<AnalyzerSettingInterfaceInteger> mOvdSamplePointInterface;
 };
 #endif // ONEWIRE_ANALYZER_SETTINGS
